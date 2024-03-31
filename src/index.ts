@@ -117,6 +117,26 @@ app.group("/verify", (app) =>
 
 				const { id } = payload;
 
+				const hasRole = await bot.guilds.fetch(GUILD_ID).then(async (guild) => {
+					return guild.members
+						.fetch(id)
+						.then((member) => {
+							if (member.roles.cache.has(VERIFIED_ROLE_ID)) {
+								return true;
+							}
+
+							return false;
+						})
+						.catch((error) => {
+							console.error(error);
+							return false;
+						});
+				});
+
+				if (hasRole) {
+					return '<p id="result">You have been authorized. You may return to the Purdue Class of 2028 Discord Server.</p>';
+				}
+
 				const response = await bot.guilds
 					.fetch(GUILD_ID)
 					.then(async (guild) => {
