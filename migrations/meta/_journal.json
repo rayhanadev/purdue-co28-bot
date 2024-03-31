@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1711925680984,
+      "tag": "0000_salty_the_anarchist",
+      "breakpoints": true
+    }
+  ]
+}

@@ -12,6 +12,8 @@ export const env = createEnv({
 		PASERK_PUBLIC_KEY: z.string(),
 		PASERK_SECRET_KEY: z.string(),
 		SENDGRID_API_KEY: z.string(),
+		TURSO_AUTH_TOKEN: z.string(),
+		TURSO_CONNECTION_URL: z.string(),
 	},
 	runtimeEnv: {
 		NODE_ENV: Bun.env.NODE_ENV,
@@ -23,5 +25,7 @@ export const env = createEnv({
 		PASERK_PUBLIC_KEY: Bun.env.PASERK_PUBLIC_KEY,
 		PASERK_SECRET_KEY: Bun.env.PASERK_SECRET_KEY,
 		SENDGRID_API_KEY: Bun.env.SENDGRID_API_KEY,
+		TURSO_AUTH_TOKEN: Bun.env.TURSO_AUTH_TOKEN,
+		TURSO_CONNECTION_URL: Bun.env.TURSO_CONNECTION_URL,
 	},
 });

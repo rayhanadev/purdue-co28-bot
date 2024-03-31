@@ -1,10 +1,18 @@
 import { html } from "@elysiajs/html";
 import sendgrid from "@sendgrid/mail";
-import { Client, GatewayIntentBits, ChannelType } from "discord.js";
-import type { TextChannel } from "discord.js";
+import {
+	Client,
+	GatewayIntentBits,
+	ChannelType,
+	type TextChannel,
+} from "discord.js";
+import type {} from "discord.js";
+import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { sign, verify } from "paseto-ts/v4";
 
+import { db } from "./db";
+import { type InsertUser, users } from "./db/schema";
 import { env } from "./env";
 
 const GUILD_ID = "1220609699691499530";
@@ -70,6 +78,16 @@ app.group("/verify", (app) =>
 					return '<p id="result">‼️ Invalid email address, please use your official @purdue.edu email.</p>';
 				}
 
+				const dbUser = await db
+					.select()
+					.from(users)
+					.where(eq(users.email, email));
+
+				if (dbUser.length > 0) {
+					set.status = 400;
+					return '<p id="result">‼️ This email is already in use. Please contact me@rayhanadev.com if this is a mistake.</p>';
+				}
+
 				const token = sign(env.PASERK_SECRET_KEY, {
 					id: user.id,
 					email,
@@ -115,7 +133,17 @@ app.group("/verify", (app) =>
 
 				const { payload } = verify(env.PASERK_PUBLIC_KEY, token);
 
-				const { id } = payload;
+				const { id, email } = payload;
+
+				const dbUser = await db
+					.select()
+					.from(users)
+					.where(eq(users.email, email));
+
+				if (dbUser.length > 0) {
+					set.status = 400;
+					return '<p id="result">‼️ This email is already in use. Please contact me@rayhanadev.com if this is a mistake.</p>';
+				}
 
 				const hasRole = await bot.guilds.fetch(GUILD_ID).then(async (guild) => {
 					return guild.members
@@ -168,6 +196,12 @@ app.group("/verify", (app) =>
 						return null;
 					});
 				});
+
+				await db.insert(users).values({
+					id: id,
+					email: email,
+					name: response.user.username,
+				} satisfies InsertUser);
 
 				return '<p id="result">You have been authorized. You may return to the Purdue Class of 2028 Discord Server.</p>';
 			},
