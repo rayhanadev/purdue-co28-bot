@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Purdue Class of 2028 Auth</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+        />
+        <script
+            src="https://unpkg.com/htmx.org@1.9.11"
+            integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
+            crossorigin="anonymous"
+        ></script>
+    </head>
+    <body>
+        <h1>Purdue Class of 2028 Auth</h1>
+        <p>
+            Please enter your @purdue.edu email address to get access to this
+            server.
+        </p>
+
+        <div id="result"></div>
+
+        <form hx-post="/verify" hx-target="#result" hx-swap="outerHTML">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+            <button type="submit">Verify Email</button>
+        </form>
+    </body>
+</html>
