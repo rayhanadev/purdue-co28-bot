@@ -1,6 +1,7 @@
 import { html } from "@elysiajs/html";
 import sendgrid from "@sendgrid/mail";
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, ChannelType } from "discord.js";
+import type { TextChannel } from "discord.js";
 import { Elysia, t } from "elysia";
 import { sign, verify } from "paseto-ts/v4";
 
@@ -8,6 +9,7 @@ import { env } from "./env";
 
 const GUILD_ID = "1220609699691499530";
 const VERIFIED_ROLE_ID = "1223804777868296234";
+const GENERAL_CHANNEL_ID = "1220609699691499537";
 
 const bot = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
@@ -134,6 +136,18 @@ app.group("/verify", (app) =>
 					set.status = 500;
 					return '<p id="result">Internal Server Error</p>';
 				}
+
+				await bot.guilds.fetch(GUILD_ID).then(async (guild) => {
+					return guild.channels.fetch(GENERAL_CHANNEL_ID).then((channel) => {
+						if (channel && channel.type === ChannelType.GuildText) {
+							(channel as TextChannel).send(
+								`Welcome to the server <@${id}>! 👋`,
+							);
+							return channel;
+						}
+						return null;
+					});
+				});
 
 				return '<p id="result">You have been authorized. You may return to the Purdue Class of 2028 Discord Server.</p>';
 			},
