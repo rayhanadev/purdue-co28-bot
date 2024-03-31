@@ -1,0 +1,20 @@
+run = "bun dev"
+modules = ["bun-1.0:v23-20240319-38caddd"]
+hidden = [".config"]
+disableInstallBeforeRun = true
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", "package.json", "bun.lockb"]
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+build = ["bun run build"]
+run = ["sh", "-c", "bun start"]
+deploymentTarget = "gce"
+ignorePorts = false
+
+[[ports]]
+localPort = 3000
+externalPort = 80
