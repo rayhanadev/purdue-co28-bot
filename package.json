@@ -3,7 +3,7 @@
   "name": "boilerbot-v1",
   "module": "src/index.ts",
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist",
+    "build": "bun build src/index.ts --outdir dist --target bun",
     "dev": "bun --watch src/index.ts",
     "format": "biome format ./src --write",
     "lint": "biome lint ./src",
