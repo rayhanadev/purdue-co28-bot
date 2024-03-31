@@ -6,8 +6,12 @@ verified Purdue emails can join. It is written in Bun and uses Elysia, discord.j
 ## Installation
 
 1. Clone this repository
-2. Run `bun install`
-3. Create a `.env` file with the following contents:
+2. Run `bun install` to install all dependencies.
+3. Run `turso db create [dbname]` to create a new database.
+4. Run `turso db tokens create [dbname]` to create a new database token.
+5. Run `turso db show [dbname]` to get the database URL.
+6. Run `bun gen:paserk` to generate a new Paserk keypair.
+7. Create a `.env` file with the following contents:
 
 ```
 COOKIE_SECRET=
@@ -18,9 +22,12 @@ DISCORD_REDIRECT_URI=
 PASERK_PUBLIC_KEY=
 PASERK_SECRET_KEY=
 SENDGRID_API_KEY=
+TURSO_AUTH_TOKEN=
+TURSO_CONNECTION_URL=
 ```
 
-4. Run `bun dev`
+8. Run `bun db:migrate` to run all migrations upwards.
+9. Run `bun dev` to start the server.
 
 ## Usage
 
