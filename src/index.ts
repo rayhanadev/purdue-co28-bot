@@ -85,7 +85,7 @@ app.group("/verify", (app) =>
 
 				if (dbUser.length > 0) {
 					set.status = 400;
-					return '<p id="result">‼️ This email is already in use. Please contact me@rayhanadev.com if this is a mistake.</p>';
+					return '<p id="result">You have already been verified! Please contact me@rayhanadev.com if you think is a mistake.</p>';
 				}
 
 				const token = sign(env.PASERK_SECRET_KEY, {
