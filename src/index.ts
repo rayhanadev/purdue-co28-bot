@@ -1,5 +1,4 @@
 import { html } from "@elysiajs/html";
-import sendgrid from "@sendgrid/mail";
 import {
 	Client,
 	GatewayIntentBits,
@@ -10,6 +9,7 @@ import type {} from "discord.js";
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { sign, verify } from "paseto-ts/v4";
+import { Resend } from "resend";
 
 import { db } from "./db";
 import { type InsertUser, users } from "./db/schema";
@@ -40,7 +40,7 @@ const bot = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
 });
 
-sendgrid.setApiKey(env.SENDGRID_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY);
 
 const app = new Elysia({
 	cookie: {
@@ -112,14 +112,22 @@ app.group("/verify", (app) =>
 
 				const url = `${env.DISCORD_REDIRECT_URI}/verify/callback?token=${token}`;
 
-				const msg = {
-					to: email,
-					from: "em5024@furret.dev",
-					subject: "Verification for Purdue Class of 2028 Discord Server",
-					html: `Click <a href="${url}">this</a> link to verify your Purdue email for the Purdue Class of 2028 Discord Server.<br /><br />If you did not request this, please ignore this email.<br /><br />If the link does not work, copy and paste the following URL into your browser: ${url}`,
-				};
+				const response = await resend.emails.send({
+					from: "Ray <verify@mail.rayhanadev.com>",
+					to: [email],
+					subject: "Verify your Email Address",
+					html: `Click <a href="${url}">this</a> link to verify your email address for the Purdue Class of 2028 Discord Server.<br /><br />If you did not request this, please ignore this email.<br /><br />If the link does not work, copy and paste the following URL into your browser: ${url}`,
+					tags: [
+						{
+							name: "category",
+							value: "confirm_email",
+						},
+					],
+				});
 
-				sendgrid.send(msg);
+				if (response.error) {
+					return `<p id="result">‼️ An error occurred while sending the verification email. Please contact me@rayhanadev.com for support.</p>`;
+				}
 
 				return '<p id="result">✅ Please check your email for a verification request!</p>';
 			},
