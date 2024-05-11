@@ -18,6 +18,23 @@ import { env } from "./env";
 const GUILD_ID = "1220609699691499530";
 const VERIFIED_ROLE_ID = "1223804777868296234";
 const GENERAL_CHANNEL_ID = "1220609699691499537";
+const ANNOUNCEMENTS_CHANNEL_ID = "1220609699691499534";
+const INTRODUCTIONS_CHANNEL_ID = "1223813847509499947";
+const ROLES_CHANNEL_ID = "1223842237377675384";
+
+const SERVER_WELCOME_MESSAGE = (
+	userId: string,
+) => `**Welcome to the server <@${userId}>! 👋**
+
+Here are some quick-links for you to help you get around:
+- Read up on the latest news in <#${ANNOUNCEMENTS_CHANNEL_ID}>!
+- Get your roles in the <#${ROLES_CHANNEL_ID}> channel!
+- Introduce yourself in <#${INTRODUCTIONS_CHANNEL_ID}>!
+- Meet your fellow classmates here in <#${GENERAL_CHANNEL_ID}>!
+
+(Tip: we suggest changing your username using \`/nick\` so people know who you are!)
+
+We're glad you're here and hope you have a good time! 🎉`;
 
 const bot = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
@@ -145,6 +162,28 @@ app.group("/verify", (app) =>
 					return '<p id="result">‼️ This email is already in use. Please contact me@rayhanadev.com if this is a mistake.</p>';
 				}
 
+				const isInServer = await bot.guilds
+					.fetch(GUILD_ID)
+					.then(async (guild) => {
+						return guild.members
+							.fetch(id)
+							.then((member) => {
+								if (member) {
+									return true;
+								}
+
+								return false;
+							})
+							.catch((error) => {
+								console.error(error);
+								return false;
+							});
+					});
+
+				if (!isInServer) {
+					return '<p id="result">‼️ You must be a member of the Purdue Class of 2028 Discord server to verify your email.</p>';
+				}
+
 				const hasRole = await bot.guilds.fetch(GUILD_ID).then(async (guild) => {
 					return guild.members
 						.fetch(id)
@@ -188,9 +227,7 @@ app.group("/verify", (app) =>
 				await bot.guilds.fetch(GUILD_ID).then(async (guild) => {
 					return guild.channels.fetch(GENERAL_CHANNEL_ID).then((channel) => {
 						if (channel && channel.type === ChannelType.GuildText) {
-							(channel as TextChannel).send(
-								`Welcome to the server <@${id}>! 👋`,
-							);
+							(channel as TextChannel).send(SERVER_WELCOME_MESSAGE(id));
 							return channel;
 						}
 						return null;
