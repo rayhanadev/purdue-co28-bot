@@ -11,20 +11,65 @@
             integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
             crossorigin="anonymous"
         ></script>
+        <style>
+            hr {
+                padding-bottom: 8px;
+            }
+            
+            form {
+                display: flex;
+                align-items: end;
+            }
+
+            form > button {
+                max-height: calc(2.5rem + 10px);
+            }
+        </style>
     </head>
     <body>
         <h1>Purdue Class of 2028 Auth</h1>
         <p>
-            Please enter your @purdue.edu email address to get access to this
-            server.
+            Welcome to Purdue! :)
         </p>
+        <p>
+            To join the Class of 2028 Discord server first accept this invite: <a href="https://discord.gg/YxhWbu2rUw">https://discord.gg/YxhWbu2rUw</a>
+        </p>
+            Afterwards, please enter your @purdue.edu email address to verify your account.
+        </p>
+
+        <hr />
 
         <div id="result"></div>
 
         <form hx-post="/verify" hx-target="#result" hx-swap="outerHTML">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required />
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required />
+            </div>
             <button type="submit">Verify Email</button>
         </form>
+
+        <h2>FAQs</h2>
+        <details>
+            <summary>Click to view</summary>
+            <ul>
+                <li>
+                    <strong>I submitted the form but I have not recieved an email. What do I do?</strong>
+                    <p>Check your Spam folder first, the verification email may end up there. Also make sure you are using the Outlook option for your @purdue.edu account, sometimes email forwarding doesn't work.</p>
+                </li>
+                <li>
+                    <strong>Why do you need my email address?</strong>
+                    <p>We use your @purdue.edu email address to ensure you are a Purdue student and protect our users!</p>
+                </li>
+                <li>
+                    <strong>Can I request for access to my data or deletion of my data?</strong>
+                    <p>Yes, please contact me@rayhanadev.com to initiate this process.</p>
+                </li>
+                <li>
+                    <strong>Where can I view this code?</strong>
+                    <p>The code is public on <a href="https://github.com/rayhanadev/purdue-co28-bot">Github</a> and hosted on <a href="https://replit.com/@rayhanadev/purdue-co28-bot">Replit</a>.</p>
+                </li>
+            </ul>
+        </details>
     </body>
 </html>
